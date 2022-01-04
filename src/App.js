@@ -1,7 +1,35 @@
 import React, {Component} from 'react';
 import './App.css';
+
+import Paper from '@material-ui/core/Paper'
+//컴포넌트를 감싸기 위한 태그
+
 import Customer from './components/Customer';
+
+
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+//meterial의 테이블 ui
+
+import { withStyles } from '@material-ui/core/styles';
+//리액트로 css지정하는 라이브러리
+
 //만들어둔 커스터머 컴포넌트를 불러옴
+
+
+const styles = {
+  root: {
+  width: "100%",
+  overflowX: "auto"
+  
+  },
+  table: {
+  minWidth: 1080
+  }
+  };
 
 const customers = [{
 
@@ -37,13 +65,28 @@ const customers = [{
 
 class App extends Component {
   render(){
+    const {classes} = this.props;
   return (
-    <div>
-   { customers.map(c => {
+  
+      <Paper className={classes.root}>
+      <Table className={classes.table}>
+        <TableHead>
+      <TableRow>
 
-      return(
+<TableCell>번호</TableCell>
+<TableCell>이미지</TableCell>
+<TableCell>이름</TableCell>
+<TableCell>생년월일</TableCell>
+<TableCell>성별</TableCell>
+<TableCell>직업</TableCell>
 
-      <Customer
+      </TableRow>
+
+
+        </TableHead>
+    <TableBody>
+   
+    { customers.map(c => {return( <Customer
       key={c.id}
       //react에서 map을 쓸 때에는 key 프로퍼티를 생성해주어야함
       id={c.id}
@@ -55,10 +98,12 @@ class App extends Component {
       
       />  
 
-
       );
     }) }
-    </div>
+    </TableBody>
+      </Table>
+      </Paper>
+   
   );
   //고객의 정보를 객체배열에 담고, map으로 일괄처리
   }
@@ -67,5 +112,5 @@ class App extends Component {
 //그 역할을 하는 것이 컴포넌트
 //컴포넌트 하나를 상속하여 만듬.
 //컴포넌트 안에는 다른 컴포넌트가 올 수 있음
-export default App;
+export default withStyles(styles)(App);
 
