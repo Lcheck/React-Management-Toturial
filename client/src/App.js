@@ -31,39 +31,30 @@ const styles = {
   }
   };
 
-const customers = [{
 
-'id' : 1,
-'image' : 'https://placeimg.com/64/64/any',
-'name':'홍동',
-'birthday':'991223',
-'gender':'남자',
-'job':'군인'
-
-},
-{
-
-  'id' : 2,
-  'image' : 'https://placeimg.com/64/64/any',
-  'name':'은호',
-  'birthday':'891023',
-  'gender':'남자',
-  'job':'학생'
-  
-  },
-  {
-
-    'id' : 3,
-    'image' : 'https://placeimg.com/64/64/any',
-    'name':'채림',
-    'birthday':'790223',
-    'gender':'여자',
-    'job':'BJ'
-    
-    }]
-
+//고객 데이터는 처음에 비어있다가, 요청이 들어올 경우 서버에서 가져온다.
+//그래야 불필요한 데이터를 불러오지 않을 수 있다. (성능 업업)
 
 class App extends Component {
+
+  state = { //변경될 수 있는 정보들
+
+      customers: ""
+  }
+
+  componentDidMount(){//컴포넌트가 로드되었을 때 실행되는 메서드
+
+      this.callApi() 
+      .then(res=>this.setState({customers:res})) //callApi가 실행되고나면
+      .catch(err=>console.log(err));
+  } //body를 res로 바꾸어 customers에 할당해 설정
+
+  callApi = async () => { //비동기적으로 수행
+    const response = await fetch('/api/customers');
+    const body = await response.json(); //순차 수행
+    return body; //서버의 customers 정보를 추출해 body로 반환
+  }
+
   render(){
     const {classes} = this.props;
   return (
@@ -86,7 +77,12 @@ class App extends Component {
         </TableHead>
     <TableBody>
    
-    { customers.map(c => {return( <Customer
+  
+    { 
+    //테이블 태그가 로드되는 시점에는 customers의 정보가 아직
+    //다 로드되지 않았으므로 
+    // 조건연산자를 사용해 불려와졌을 때 출력토록 한다.
+    this.state.customers ? this.state.customers.map(c => {return( <Customer
       key={c.id}
       //react에서 map을 쓸 때에는 key 프로퍼티를 생성해주어야함
       id={c.id}
@@ -99,7 +95,7 @@ class App extends Component {
       />  
 
       );
-    }) }
+    }) : "" }
     </TableBody>
       </Table>
       </Paper>
