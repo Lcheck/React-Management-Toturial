@@ -12,15 +12,18 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+
+import CircularProgress  from '@material-ui/core/CircularProgress';
 //meterial의 테이블 ui
 
 import { withStyles } from '@material-ui/core/styles';
+import createSpacing from '@material-ui/core/styles/createSpacing';
 //리액트로 css지정하는 라이브러리
 
 //만들어둔 커스터머 컴포넌트를 불러옴
 
 
-const styles = {
+const styles = { //이게 props로 전달되는 듯?
   root: {
   width: "100%",
   overflowX: "auto"
@@ -28,6 +31,10 @@ const styles = {
   },
   table: {
   minWidth: 1080
+  },
+  progress:{
+
+    margin:100
   }
   };
 
@@ -39,24 +46,32 @@ class App extends Component {
 
   state = { //변경될 수 있는 정보들
 
-      customers: ""
+      customers: "",
+      completed:0 //로딩변수 
   }
 
   componentDidMount(){//컴포넌트가 로드되었을 때 실행되는 메서드
-
+    this.timer = setInterval(this.progress, 20); //0.2초마다 progress 함수 실행
       this.callApi() 
       .then(res=>this.setState({customers:res})) //callApi가 실행되고나면
       .catch(err=>console.log(err));
   } //body를 res로 바꾸어 customers에 할당해 설정
 
   callApi = async () => { //비동기적으로 수행
-    const response = await fetch('/api/customers');
+    const response = await fetch('/api/customers');//고객정보 추출
     const body = await response.json(); //순차 수행
     return body; //서버의 customers 정보를 추출해 body로 반환
   }
 
+  progress = () =>{
+    const {completed} = this.state;
+    this.setState({completed:completed >= 100 ? 0 : completed+1});
+    //로딩바가 100넘으면 0으로 아니면 1씩 증가
+
+  }
   render(){
-    const {classes} = this.props;
+    const {classes} = this.props;//props의 정체가 뭘까?
+    console.log(classes);
   return (
   
       <Paper className={classes.root}>
@@ -95,7 +110,14 @@ class App extends Component {
       />  
 
       );
-    }) : "" }
+    }) : <TableRow>
+      <TableCell colSpan='6' align='center'>
+
+
+        <CircularProgress className={classes.progress} variant='indeterminate' value={this.state.complete}/>
+      </TableCell>
+
+    </TableRow> }
     </TableBody>
       </Table>
       </Paper>
@@ -109,4 +131,3 @@ class App extends Component {
 //컴포넌트 하나를 상속하여 만듬.
 //컴포넌트 안에는 다른 컴포넌트가 올 수 있음
 export default withStyles(styles)(App);
-
