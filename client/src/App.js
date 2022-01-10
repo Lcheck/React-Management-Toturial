@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper'
 //컴포넌트를 감싸기 위한 태그
 
 import Customer from './components/Customer';
+import CustomerAdd from './components/CustomerAdd';
 
 
 import Table from '@material-ui/core/Table';
@@ -73,7 +74,7 @@ class App extends Component {
     const {classes} = this.props;//props의 정체가 뭘까?
     console.log(classes);
   return (
-  
+  <div>
       <Paper className={classes.root}>
       <Table className={classes.table}>
         <TableHead>
@@ -121,7 +122,8 @@ class App extends Component {
     </TableBody>
       </Table>
       </Paper>
-   
+      <CustomerAdd/>
+      </div>
   );
   //고객의 정보를 객체배열에 담고, map으로 일괄처리
   }
