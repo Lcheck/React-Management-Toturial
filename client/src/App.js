@@ -45,10 +45,38 @@ const styles = { //이게 props로 전달되는 듯?
 
 class App extends Component {
 
-  state = { //변경될 수 있는 정보들
+  // state = { //변경될 수 있는 정보들
 
-      customers: "",
-      completed:0 //로딩변수 
+  //     customers: "",
+  //     completed:0 //로딩변수 
+  // }
+
+  constructor (props){
+super(props);
+
+
+this.state = {
+
+  customers:"",
+  completed:0
+
+}
+  }
+
+  stateRefresh = () =>{ //state갱신 함수
+
+// this.setState({
+
+// customers:'', //각 프로퍼티 스테이트 초기화
+// complete:0
+
+// });
+//위부분은 없어도 될 거 같은데? 괜히 오류남
+
+this.callApi()  //고객정보 다시 불러오기
+      .then(res=>this.setState({customers:res})) 
+      .catch(err=>console.log(err));
+
   }
 
   componentDidMount(){//컴포넌트가 로드되었을 때 실행되는 메서드
@@ -98,7 +126,7 @@ class App extends Component {
     //테이블 태그가 로드되는 시점에는 customers의 정보가 아직
     //다 로드되지 않았으므로 
     // 조건연산자를 사용해 불려와졌을 때 출력토록 한다.
-    this.state.customers ? this.state.customers.map(c => {return( <Customer
+    this.state.customers ? this.state.customers.map(c => <Customer //return 생략 
       key={c.id}
       //react에서 map을 쓸 때에는 key 프로퍼티를 생성해주어야함
       id={c.id}
@@ -110,8 +138,8 @@ class App extends Component {
       
       />  
 
-      );
-    }) : <TableRow>
+      
+    ) : <TableRow>
       <TableCell colSpan='6' align='center'>
 
 
@@ -122,7 +150,8 @@ class App extends Component {
     </TableBody>
       </Table>
       </Paper>
-      <CustomerAdd/>
+      <CustomerAdd stateRefresh={this.stateRefresh}/>
+      {/* customerAdd 에게 부모의 stateRefresh를 프롭스로 전달 */}
       </div>
   );
   //고객의 정보를 객체배열에 담고, map으로 일괄처리

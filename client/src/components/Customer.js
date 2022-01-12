@@ -8,6 +8,7 @@ class Customer extends React.Component{
 render(){
 //render메서드는 return값에 내부 컴포넌트를 가져야함
     return (
+        //부모 (app.js)로부터 props를 전달받음.
             <TableRow>
                 <TableCell>{this.props.id}</TableCell>
                 <TableCell><img src={this.props.image} alt="profile"/></TableCell>

@@ -47,11 +47,30 @@ handleFormSubmit = (e) => {
 e.preventDefault() //해당함수의 기본기능 막기
 
 this.addCustomer() //addCustomer는 비동기이다.
-.then((response)=>{
+.then((response)=>{ 
 
-console.log(response.data)
-
+    this.props.stateRefresh();
+    //프롭스로 전달 받은 갱신 메서드 실행
+    //addCustomer는 비동기이기 때문에 then에 갱신 메서드를 적는다.
+    //addCustomer의 실행을 보장받기 위해서
+    
 })
+//고객 정보 추가후 다시 정보기입란을 초기화한다.
+this.setState({file:null, 
+                userName:'',
+                birthday:'',
+                gender:'',
+                job:'',
+                fileName:''})
+
+           
+
+                // window.location.reload(); //그냥 페이지 새로고침
+                //(원래는 컴포넌트만 갱신해주는 게 좋음)
+                //리액트는 spa(single page application)이다.
+                //웹페이지 전체를 새로고침 해주는 것은 비효율적이다.
+                //고객정보 컴포넌트만을 새로고침 해주는 게 바람직하다.
+                //이때 부모컴포넌트 (app.js)?의 props를 이용해 해당 컴포넌트를 갱신해주면 된다.
 
 } 
 addCustomer = () =>{ //입력한 정보를 바탕으로 고객 정보를 추가해주는 메서드
