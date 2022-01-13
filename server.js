@@ -40,8 +40,9 @@ const upload = multer({dest:'./upload'}); //업로드 폴더 설정
 app.get('/api/customers',(req,res)=>{
 
    
-connection.query("SELECT * FROM CUSTOMER",(err,rows,fields)=>{
+connection.query("SELECT * FROM CUSTOMER WHERE isDeleted = 0",(err,rows,fields)=>{
 //CUSTOMER 데이터 베이스틑 가져옴
+//삭제되지 않은 데이터만 가져욤
 
   res.send(rows); //모든열을 응답
 
@@ -55,7 +56,9 @@ app.use('/image',express.static('./upload'));
 app.post('/api/customers',upload.single('image'),(req,res)=>{
 //입력 정보가 /api/customer에 저장되면 추가된 정보를 
 //데이터베이스에 추가하는 구문, multer가 ?매개변수에 인자를 넣어준다.
-    let sql='INSERT INTO CUSTOMER VALUES (null,?,?,?,?,?)';
+    let sql='INSERT INTO CUSTOMER VALUES (null,?,?,?,?,?,now(),0)';
+    //데이터를 추가할 때 삭제값은 기본적으로0임
+    //추가한 날짜도 기입해줌
     let image = 'http://localhost:5000/image/' + req.file.filename; //멀터가 중복되지 않도록 파일이름을 설정해줌
     //localhost 5000을 붙이니까 이미지가 정상적으로 업로드된다.
     let name = req.body.name;
@@ -72,4 +75,18 @@ app.post('/api/customers',upload.single('image'),(req,res)=>{
       })
 
 });
+
+app.delete('/api/customers/:id',(req,res)=>{//Delete요청을 처리해주는 메서드
+
+let sql = 'UPDATE CUSTOMER SET isDeleted =1 WHERE id = ?'; //해당되는 id의 isDeleted를 1로
+let params = [req.params.id]; //id파라미터 저장
+
+connection.query(sql,params, //쿼리문 전달
+  (err,rows,fields)=>{
+
+    res.send(rows);
+  })
+
+});
+
 app.listen(port, ()=> console.log('Listening'));

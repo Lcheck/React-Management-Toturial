@@ -100,7 +100,7 @@ this.callApi()  //고객정보 다시 불러오기
   }
   render(){
     const {classes} = this.props;//props의 정체가 뭘까?
-    console.log(classes);
+   
   return (
   <div>
       <Paper className={classes.root}>
@@ -114,6 +114,7 @@ this.callApi()  //고객정보 다시 불러오기
 <TableCell>생년월일</TableCell>
 <TableCell>성별</TableCell>
 <TableCell>직업</TableCell>
+<TableCell>설정</TableCell>
 
       </TableRow>
 
@@ -135,12 +136,12 @@ this.callApi()  //고객정보 다시 불러오기
       birthday = {c.birthday}
       gender = {c.gender}
       job = {c.job}
-      
+      stateRefresh={this.stateRefresh}
       />  
 
       
     ) : <TableRow>
-      <TableCell colSpan='6' align='center'>
+      <TableCell colSpan='7' align='center'>
 
 
         <CircularProgress className={classes.progress} variant='indeterminate' value={this.state.complete}/>

@@ -1,6 +1,7 @@
 import React from 'react';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import CustomerDeleted from './CustomerDelete.';
 //리액트를 사용하기 위해 라이브러리를 불러옴
 
 class Customer extends React.Component{
@@ -16,8 +17,14 @@ render(){
                 <TableCell>{this.props.birthday}</TableCell>
                 <TableCell>{this.props.gender}</TableCell>
                 <TableCell>{this.props.job}</TableCell>
+                <TableCell><CustomerDeleted stateRefresh={this.props.stateRefresh} id={this.props.id}/></TableCell>
+                
             </TableRow>
     )
+//stateRefresh 메서드가 app.js에 있는데 app.js에서 customer컴포넌트에게 props전달을 해주어야한다.\
+//app.js - > customer - > customerDeleted 상속의 과정인 것이다. 이래서 복잡해지는 거구나.
+//redux가 그 해결방안이다.
+
 
     //react의 요소는 jsx문법을 따르는데, 반드시 요소를 div태그로 감싸야 한다는 문법이 있음
     //
