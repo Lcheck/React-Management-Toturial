@@ -81,7 +81,7 @@ app.delete('/api/customers/:id',(req,res)=>{//Delete요청을 처리해주는 �
 let sql = 'UPDATE CUSTOMER SET isDeleted =1 WHERE id = ?'; //해당되는 id의 isDeleted를 1로
 let params = [req.params.id]; //id파라미터 저장
 
-connection.query(sql,params, //쿼리문 전달
+connection.query(sql,params, //sql문에 파라미터를 씌워 전달
   (err,rows,fields)=>{
 
     res.send(rows);

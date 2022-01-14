@@ -2,6 +2,27 @@ import React,{Component} from 'react';
 import {post} from 'axios';
 //axios 모듈의 post 컴포넌트를 가져옴
 
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import {withStyles} from '@material-ui/core/styles';
+
+//dialog 모달창을 적용하기 위한 라이브러리들
+
+const styles = theme => ({
+
+    hidden:{
+        display:'none'
+
+    }
+});
+//모달 라이브러리에 스타일을 적용해주기 위함
+
+
 class CustomerAdd extends Component {
 
 
@@ -16,7 +37,8 @@ userName:'',
 birthday:'',
 gender:'',
 job:'',
-fileName:'' //파일의 이름
+fileName:'', //파일의 이름
+open:false //현재 모달이 떠있는 상황인지 체크하는 state 프로퍼티
 
 }}
 
@@ -61,7 +83,8 @@ this.setState({file:null,
                 birthday:'',
                 gender:'',
                 job:'',
-                fileName:''})
+                fileName:'',
+            open:false})
 
            
 
@@ -95,26 +118,92 @@ return post(url, formData, config)
 //axios라이브러리의 post 메서드를 이용해 원하는 url에 formdata를 전송함
 
 }
-render(){
 
+handleClickOpen = () =>{ //modal open 버튼을 눌렀을 때
+
+    this.setState({
+
+
+            open:true, //열림 상태로 바꿈
+      
+    });
+}
+
+handleClose = ()=>{
+
+    this.setState({file:null, 
+        userName:'',
+        birthday:'',
+        gender:'',
+        job:'',
+        fileName:'',
+    open:false})
+    //닫힘 상태로 바꾸고 모든 입력정보 초기화
+
+}
+
+
+render(){
+    const {classes} = this.props; //이건 뭐지? app.js로부터 받는 props는 setRefresh뿐인데?
+    
     return(
 
-        <form onSubmit={this.handleFormSubmit}>
-                <h1>고객추가</h1>
 
-                프로필 이미지:<input type="file" name="file" file={this.state.file} value={this.state.fileName}
-                //파일 입력 태그, file이라는 변수에 데이터와 파일명 전달
-                //온서브밋과 온체인지는 form에서 국룰인듯
-                onChange={this.handleFileChange}/> 
+        <div>
+            <Button variant='contained' color='primary' onClick={this.handleClickOpen}>
+            고객추가하기
+            </Button>
+            <Dialog open={this.state.open} onClose={this.handleClose}> 
+                {/* open이 true일 때만 보임, 닫기 버튼 누르면 handleClose 실행 */}
+                <DialogTitle>고객추가</DialogTitle>
+
+                <DialogContent>
+
+                <input className={classes.hidden} accept="image/*" id="raised-button-file" type="file" file={this.state.file} value={this.state.fileName} onChange={this.handleFileChange}/>
+{/* 클래스 설정, 이미지 파일만 받게함 */}
+            <label htmlFor='raised-button-file'>
+
+                <Button variant='contained' color='primary' component='span' name='file'>
+                    {this.state.fileName === "" ? '프로필 이미지 선택' : this.state.fileName}
+                    {/* 현재 fileName이 선택되지 않았으면 전자 됐으면 후자를 출력 */}
+                </Button>
+            </label>
+            <br/>
+                <TextField label='이름' type='text' name='userName' value={this.state.userName} onChange={this.handleValueChange} /><br/>
+                <TextField label='생년월일' type='text' name='birthday' value={this.state.birthday} onChange={this.handleValueChange} /><br/>
+                <TextField label='성별' type='text' name='gender' value={this.state.gender} onChange={this.handleValueChange} /><br/>
+               <TextField label='직업' type='text' name='job' value={this.state.job} onChange={this.handleValueChange} /><br/>
+
+                </DialogContent>
+                <DialogActions>
+
+                    <Button variant='contained' color='primary' onClick={this.handleFormSubmit}>추가</Button>
+                    <Button variant='outlined' color='primary' onClick={this.handleClose}>닫기</Button>
+                </DialogActions>
+            </Dialog>
+
+
+        </div>
+
+
+
+
+        // <form onSubmit={this.handleFormSubmit}>
+        //         <h1>고객추가</h1>
+
+        //         프로필 이미지:<input type="file" name="file" file={this.state.file} value={this.state.fileName}
+        //         //파일 입력 태그, file이라는 변수에 데이터와 파일명 전달
+        //         //온서브밋과 온체인지는 form에서 국룰인듯
+        //         onChange={this.handleFileChange}/> 
                 
-                이름:<input type='text' name='userName' value={this.state.userName} onChange={this.handleValueChange} /><br/>
-                생년월일:<input type='text' name='birthday' value={this.state.birthday} onChange={this.handleValueChange} /><br/>
-                성별:<input type='text' name='gender' value={this.state.gender} onChange={this.handleValueChange} /><br/>
-                직업:<input type='text' name='job' value={this.state.job} onChange={this.handleValueChange} /><br/>
-                <button type="submit">추가하기</button>
-                {/* 위버튼을 누르면 handleFormSubmit 함수가 호출됨 */}
+        //         이름:<input type='text' name='userName' value={this.state.userName} onChange={this.handleValueChange} /><br/>
+        //         생년월일:<input type='text' name='birthday' value={this.state.birthday} onChange={this.handleValueChange} /><br/>
+        //         성별:<input type='text' name='gender' value={this.state.gender} onChange={this.handleValueChange} /><br/>
+        //         직업:<input type='text' name='job' value={this.state.job} onChange={this.handleValueChange} /><br/>
+        //         <button type="submit">추가하기</button>
+        //         {/* 위버튼을 누르면 handleFormSubmit 함수가 호출됨 */}
 
-        </form>
+        // </form>
 
     );
 
@@ -125,4 +214,5 @@ render(){
 
 
 
-export default CustomerAdd;
+export default withStyles(styles)(CustomerAdd);
+            //props를 classes 전달하여 사용했는데 이게 그 출처인가? 
